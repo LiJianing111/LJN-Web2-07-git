@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>轮播</title>
+	<meta charset="utf-8">
+	<script src="js/animate.js"></script>
+	<style >
+	     @import url("style.css");
+	</style>
+
+</head>
+<body>
+	<div class="caution">
+		<img src="images/a15.png" class="img1">
+		<marquee direction = "left" behavior ="alternative" loop= "-1" bgcolor= "lightgrey" scrollamount="" height="25px" width = "1000px">
+		<font color="red" size="3px" >[温馨提示]最近有不少不法分子在网上骗人，请大家注意！</font>
+	</marquee>
+	</div>
+	
+<div class="box" id="box"><!-- 轮播图的div -->
+	<div class="slider" id="slider">
+	    <div class="slide"><img src="images/b5.png" alt=""></div>
+	    <div class="slide"><img src="images/b1.png" alt=""></div> 
+	    <div class="slide"><img src="images/b2.png" alt=""></div>
+	    <div class="slide"><img src="images/b3.png" alt=""></div>
+	    <div class="slide"><img src="images/b4.png" alt=""></div>
+	    <div class="slide"><img src="images/b5.png" alt=""></div>
+	    <div class="slide"><img src="images/b1.png" alt=""></div>
+    </div>
+    <span id="left"><</span>
+    <span id="right">></span>
+    <div class="nav" id="nav">
+    	<span class="active">1</span>
+    	<span>2</span>
+    	<span>3</span>
+    	<span>4</span>
+    	<span>5</span>
+    </div>
+</div>
+<script type="text/javascript">
+	var box = document.getElementById('box');
+	var oNavlist = document.getElementById('nav').children;
+	var slider = document.getElementById('slider');
+	var left = document.getElementById('left');
+	var right = document.getElementById('right');
+	var index = 1;
+	var timer;
+	var isMoving = false;
+	//轮播下一张的函数
+
+//轮播图
+    function next(){
+    	index++;//让右面的出来
+    	navChange();
+        animate(slider,{left:-1200*index},function(){
+        	if(index === 6){
+        		slider.style.left = "-1200px";//每到最后一张瞬间赋值为下标1，并重新赋值下标为1
+        		index = 1;
+        	}
+        });
+    }
+    function prev(){
+    	index--;//让左面的出来
+    	navChange();
+    	animate(slider,{left:-1200*index},function(){
+    		if (index === 0) {
+    			slider.style.left = "-6000px";//5张图
+    			index = 5;//瞬间赋为第五张图 
+    		}
+    	})
+    }
+	var timer = setInterval(next,2000)//外层时间保证比动一次时间长,保证一次运动已经结束了
+	//鼠标划入清定时器
+	box.onmouseover = function(){
+		animate(left,{opacity:50});//箭头淡入淡出
+		animate(right,{opacity:50});
+		clearInterval(timer);//划上去清掉定时器
+	}
+	//鼠标划出开定时器
+	box.onmouseout = function(){
+		animate(left,{opacity:0});
+		animate(right,{opacity:0});
+		timer = setInterval(next,2000);
+	}
+	right.onclick = next;
+	left.onclick = prev;
+
+	 //小按钮点击事件
+	for(var i = 0 ;i<oNavlist.length;i++){
+		oNavlist[i].idx = i;
+		//每个li都是一个dom结点，一个结点就是一个对象，可以绑定属性
+		oNavlist[i].onclick = function(){
+		    index = this.idx + 1 ;//因为前面多着第五张，按钮下标加1
+			navChange();
+			animate(slider,{left:-1200*index});
+		}
+	}
+	//小按钮背景色切换
+	function navChange(){//之前所有active类名 去掉，然后再给现在的加类名
+		for(var i = 0 ; i<oNavlist.length ; i++){
+			oNavlist[i].className = '' ;
+		}
+		if(index === 6){
+			oNavlist[0].className = 'active';
+		}else if(index === 0){
+			oNavlist[4].className = 'active';
+		}else{
+		    oNavlist[index-1].className = 'active';
+		}
+	}
+
+</script>
+
+</body>
+</html>
